@@ -1,6 +1,9 @@
 Olá professor!
 
-Aqui temos um gia de como utilizar o codigo.
+Aqui temos um guia de como utilizar o codigo.
+
+Para executar o codigo, basta entrar na pasta dist e executar o programa main.exe
+
 Para adicionar as arestas ou arcos entre os vertices, temos que ter em mente que cada vertice
 é representado por um numero maior que zero. Ex: 1,2,3,4,5.
 Então o primeiro vertice sempre será o numero 1.
