@@ -69,10 +69,10 @@ def DFS(quantidadeVertices, matriz, vertice=1):
         if not visitas[atual]:
             visitas[atual] = True
             vertices_visitados.append(atual+1)  # Adiciona o vértice atual à lista de visitados
-            for vizinho in range(quantidadeVertices):
-                if matriz[vizinho][atual] == 1 and not visitas[vizinho]:
-                    pilha.append(vizinho)
-                    fecho[vizinho][vertice] = 1
+            for i in range(quantidadeVertices):
+                if matriz[i][atual] == 1 and not visitas[i]:
+                    pilha.append(i)
+                    fecho[i][vertice] = 1
 
     ultimo_elemento = vertices_visitados.pop()  # Remove e captura o último elemento
     vertices_visitados.insert(0, ultimo_elemento)
@@ -122,10 +122,10 @@ def fecho_transitivo_direto(matriz, tipoBusca):
                 atual = pilha.pop()
                 if not visitados[atual]:
                     visitados[atual] = True
-                    for vizinho in range(tamanho_grafo):
-                        if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
-                            pilha.append(vizinho)
-                            fecho[vizinho][destino] = 1
+                    for i in range(tamanho_grafo):
+                        if matriz[i][atual] == 1 and not visitados[i]:
+                            pilha.append(i)
+                            fecho[i][destino] = 1
 
         # Executa a busca em profundidade a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
@@ -140,11 +140,11 @@ def fecho_transitivo_direto(matriz, tipoBusca):
 
             while fila:
                 atual = fila.popleft()
-                for vizinho in range(tamanho_grafo):
-                    if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
-                        visitados[vizinho] = True
-                        fila.append(vizinho)
-                        fecho[vizinho][destino] = 1
+                for i in range(tamanho_grafo):
+                    if matriz[i][atual] == 1 and not visitados[i]:
+                        visitados[i] = True
+                        fila.append(i)
+                        fecho[i][destino] = 1
 
         # Executa a busca em largura a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
@@ -165,10 +165,10 @@ def fecho_transitivo_inverso(matriz, tipoBusca):
                 atual = pilha.pop()
                 if not visitados[atual]:
                     visitados[atual] = True
-                    for vizinho in range(tamanho_grafo):
-                        if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
-                            pilha.append(vizinho)
-                            fecho[vizinho][destino] = 1
+                    for i in range(tamanho_grafo):
+                        if matriz[i][atual] == 1 and not visitados[i]:
+                            pilha.append(i)
+                            fecho[i][destino] = 1
 
         # Executa a busca em profundidade a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
@@ -183,17 +183,18 @@ def fecho_transitivo_inverso(matriz, tipoBusca):
 
             while fila:
                 atual = fila.popleft()
-                for vizinho in range(tamanho_grafo):
-                    if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
-                        visitados[vizinho] = True
-                        fila.append(vizinho)
-                        fecho[vizinho][destino] = 1
+                for i in range(tamanho_grafo):
+                    if matriz[i][atual] == 1 and not visitados[i]:
+                        visitados[i] = True
+                        fila.append(i)
+                        fecho[i][destino] = 1
 
         # Executa a busca em largura a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
             bfs(vertice)
         return fecho
-    
+
+# Verificar se o grafo é conexo
 def verificar_conexo(matriz):
     tamanho_grafo = len(matriz)
     # Calcula o fecho transitivo direto e o fecho transitivo inverso do grafo
