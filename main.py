@@ -127,11 +127,12 @@ while not sair:
       input("Pressione qualquer tecla para continuar...")
       u.limpar_tela()
 
-  # Finalizar execução
+  # Verificar se o grafo é Conexo
   elif opcao == 8:
-    conexo = u.verificar_conexo(matriz)
-    print(f"Valor do conexo é: {conexo}")
-    print("O grafo é conexo." if conexo else "O grafo não é conexo.")
+    #conexo = u.verificar_conexo(matriz)
+    #print(f"Valor do conexo é: {conexo}")
+    #print("O grafo é conexo." if conexo else "O grafo não é conexo.")
+    u.verificar_conexo_e_identificar_sccs(matriz)
     input("Pressione qualquer tecla para continuar...")
     u.limpar_tela()
 

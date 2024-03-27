@@ -207,3 +207,86 @@ def verificar_conexo(matriz):
             if not (fecho_direto[i][j] and fecho_inverso[i][j]):
                 return False  # Se um vértice não for alcançável, o grafo não é conexo
     return True  # Se todos os vértices forem alcançáveis, o grafo é conexo
+
+def tarjan_scc(grafo):
+    # Calcula o número de vértices no grafo
+    n = len(grafo)
+    
+    # Lista para marcar se um vértice foi visitado durante a busca
+    visitado = [False] * n
+    
+    # Lista para armazenar a ordem de descoberta de cada vértice durante a busca
+    ordem_descoberta = [-1] * n
+    
+    # Lista para armazenar o valor da baixa ligação de cada vértice durante a busca
+    baixa_ligacao = [-1] * n
+    
+    # Pilha para manter os vértices visitados durante a busca
+    pilha = []
+    
+    # Lista para armazenar os componentes fortemente conectados encontrados
+    sccs = []
+
+    # Função de busca em profundidade recursiva
+    def dfs(v, tempo):
+        # Atribui a ordem de descoberta e baixa ligação para o vértice atual
+        ordem_descoberta[v] = tempo
+        baixa_ligacao[v] = tempo
+        tempo += 1
+        
+        # Adiciona o vértice à pilha e marca como visitado
+        pilha.append(v)
+        visitado[v] = True
+
+        # Explora todos os vizinhos do vértice atual
+        for u in grafo[v]:
+            # Se o vizinho não foi visitado ainda
+            if ordem_descoberta[u] == -1:
+                # Chama recursivamente a DFS para o vizinho
+                tempo = dfs(u, tempo)
+                # Atualiza a baixa ligação do vértice atual
+                baixa_ligacao[v] = min(baixa_ligacao[v], baixa_ligacao[u])
+            # Se o vizinho já foi visitado e está na pilha (forma um ciclo)
+            elif visitado[u]:
+                # Atualiza a baixa ligação do vértice atual
+                baixa_ligacao[v] = min(baixa_ligacao[v], ordem_descoberta[u])
+
+        # Verifica se o vértice é a raiz de um componente fortemente conectado
+        if baixa_ligacao[v] == ordem_descoberta[v]:
+            # Inicializa um novo componente fortemente conectado
+            scc = []
+            while True:
+                # Remove vértices da pilha até alcançar o vértice atual
+                u = pilha.pop()
+                visitado[u] = False
+                scc.append(u+1)
+                if u == v:
+                    break
+            # Adiciona o componente fortemente conectado à lista
+            sccs.append(scc)
+
+        return tempo
+
+    # Inicia a busca em profundidade para todos os vértices não visitados
+    for v in range(n):
+        if ordem_descoberta[v] == -1:
+            dfs(v, 0)
+
+    return sccs
+def verificar_conexo_e_identificar_sccs(matriz):
+    tamanho_grafo = len(matriz)
+    fecho_direto = fecho_transitivo_direto(matriz, tipoBusca=True)
+    fecho_inverso = fecho_transitivo_inverso(matriz, tipoBusca=True)
+
+    # Verificar se todos os vértices são alcançáveis em ambos os fechos
+    for i in range(tamanho_grafo):
+        for j in range(tamanho_grafo):
+            if not (fecho_direto[i][j] and fecho_inverso[i][j]):
+                print("O grafo não é conexo.")
+                sccs = tarjan_scc(matriz)
+                print("Subgrafos fortemente conexos:")
+                for scc in sccs:
+                    print(scc)
+                return
+    
+    print("O grafo é conexo.")
