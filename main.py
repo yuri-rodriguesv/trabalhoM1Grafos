@@ -1,8 +1,6 @@
 # Importando a biblioteca de funções do projeto
 import utils as u
 
-#TODO Fazer testes com orientação. Testar para ver se o fecho transitivo direto e inverso estão funcionando corretamente! E por fim ver o notas!!
-
 # Input do usuario para receber a quantidade de vertices que o Grafo vai conter
 quantidadeVertices = int(input("Insira a quantidade de vertices desejados: "))
 u.limpar_tela()
