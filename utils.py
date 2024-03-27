@@ -98,11 +98,11 @@ def BFS(quantidadeVertices, matriz):
 
     print(visitas)  # Nova linha para melhorar a legibilidade da saída
 
-def fecho_transitivo_direto(matriz_adjacencia, coringa):
+def fecho_transitivo_direto(matriz_adjacencia, tipoBusca):
     tamanho_grafo = len(matriz_adjacencia)
     fecho = [[0] * tamanho_grafo for _ in range(tamanho_grafo)]
 
-    if coringa == True:
+    if tipoBusca == True:
         def dfs(destino):
             visitados = [False] * tamanho_grafo
             pilha = [destino]
@@ -139,12 +139,12 @@ def fecho_transitivo_direto(matriz_adjacencia, coringa):
 
         return fecho
 
-def fecho_transitivo_inverso(matriz_adjacencia, coringa):
+def fecho_transitivo_inverso(matriz_adjacencia, tipoBusca):
     tamanho_grafo = len(matriz_adjacencia)
     fecho = [[0] * tamanho_grafo for _ in range(tamanho_grafo)]
 
     # Função para realizar uma busca em profundidade a partir de um vértice de destino
-    if coringa == True:
+    if tipoBusca == True:
         def dfs(destino):
             visitados = [False] * tamanho_grafo
             pilha = [destino]

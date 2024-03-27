@@ -1,8 +1,10 @@
+# Importando a biblioteca de funções do projeto
 import utils as u
 
 #TODO Fazer testes com orientação. Testar para ver se o fecho transitivo direto e inverso estão funcionando corretamente! E por fim ver o notas!!
 
 
+# Input do usuario para receber a quantidade de vertices que o Grafo vai conter
 quantidadeVertices = int(input("Insira a quantidade de vertices desejados: "))
 u.limpar_tela()
 
@@ -80,11 +82,11 @@ while not sair:
   elif opcao == 7:
       opcao = int(input("Qual metodo de busca voce deseja usar 1.DFS; 2.BFS: "))
       if opcao == 1:
-        coringa = True
+        tipoBusca = True
       else:
-        coringa = False
+        tipoBusca = False
 
-      resultado_fecho = u.fecho_transitivo_direto(matriz, coringa)
+      resultado_fecho = u.fecho_transitivo_direto(matriz, tipoBusca)
       # Exibe o resultado
       print("Fecho Transitivo Direto:")
       for linha in resultado_fecho:
@@ -95,11 +97,11 @@ while not sair:
   elif opcao == 8:
       opcao = int(input("Qual metodo de busca voce deseja usar 1.DFS; 2.BFS: "))
       if opcao == 1:
-        coringa = True
+        tipoBusca = True
       else:
-        coringa = False
+        tipoBusca = False
         
-      resultado_fecho = u.fecho_transitivo_inverso(matriz, coringa)
+      resultado_fecho = u.fecho_transitivo_inverso(matriz, tipoBusca)
       # Exibe o resultado
       print("Fecho Transitivo Inverso:")
       for linha in resultado_fecho:
