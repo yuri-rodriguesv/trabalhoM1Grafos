@@ -1,9 +1,11 @@
 import os
 from collections import deque
 
+# limpar console
 def limpar_tela():
   os.system('cls')  # Windows
 
+# Função criada para dar input no vertice de origem e de fim para finalidade de inserir aresta ou arco, ou remove-los 
 def input_origem_fim(quantidadeVertices, opOrientacao, matriz, inserir):
     while True:
         try:
@@ -19,6 +21,7 @@ def input_origem_fim(quantidadeVertices, opOrientacao, matriz, inserir):
             input("Pressione qualquer tecla para continuar...")
             limpar_tela()
 
+    # Se for True significa que é para inserir
     if inserir == True:
         if opOrientacao == "n":
             matriz[verticeOrigem - 1][verticeFim - 1] = 1
@@ -29,6 +32,7 @@ def input_origem_fim(quantidadeVertices, opOrientacao, matriz, inserir):
             matriz[verticeOrigem - 1][verticeFim - 1] = 1
             print("Inserção feita com sucesso!")
             limpar_tela()
+    # Se for False significa que é para remover
     else:
         if opOrientacao == "n":
             matriz[verticeOrigem - 1][verticeFim - 1] = 0
@@ -39,15 +43,19 @@ def input_origem_fim(quantidadeVertices, opOrientacao, matriz, inserir):
             matriz[verticeOrigem - 1][verticeFim - 1] = 0
             print("Exclusão feita com sucesso!")
             limpar_tela()
-    
-def DFS(quantidadeVertices, matriz):
+
+# Função feita para efetuar a busca por Profundidade
+def DFS(quantidadeVertices, matriz, vertice=1):
+    # Inicializando variaveis
     pilha = []
     visitas = [0] * quantidadeVertices  # Inicializando a lista de visitas com zeros
+    fecho = [[0] * quantidadeVertices for _ in range(quantidadeVertices)]
+    vertices_visitados = []  # Lista para armazenar os vértices visitados em ordem
 
     while True:
         try:
-            verticeOrigem = int(input("Qual o vértice de origem: "))
-            if verticeOrigem > quantidadeVertices:
+            vertice = int(input("Qual o vértice de origem: "))
+            if vertice > quantidadeVertices:
                 raise ValueError(f"O número máximo de vértices é de {quantidadeVertices}, por favor insira um valor válido!")
             break
         except ValueError as e:
@@ -55,28 +63,31 @@ def DFS(quantidadeVertices, matriz):
             input("Pressione qualquer tecla para continuar...")
             limpar_tela()
 
-    pilha.append(verticeOrigem)  # Adiciona o vértice de origem à pilha
-
+    pilha.append(vertice)  # Adiciona o vértice de origem à pilha
     while pilha:
-        verticeAtual = pilha.pop()
-        if not visitas[verticeAtual - 1]:
-            print(verticeAtual, end=" ")
-            visitas[verticeAtual - 1] = 1  # Marca o vértice como visitado
-            for i in range(quantidadeVertices - 1, -1, -1):  # Itera sobre os vértices adjacentes na ordem inversa
-                if matriz[verticeAtual - 1][i] and not visitas[i]:  # Se há uma aresta e o vértice adjacente não foi visitado
-                    pilha.append(i + 1)  # Adiciona o vértice adjacente à pilha
+        atual = pilha.pop()
+        if not visitas[atual]:
+            visitas[atual] = True
+            vertices_visitados.append(atual+1)  # Adiciona o vértice atual à lista de visitados
+            for vizinho in range(quantidadeVertices):
+                if matriz[vizinho][atual] == 1 and not visitas[vizinho]:
+                    pilha.append(vizinho)
+                    fecho[vizinho][vertice] = 1
 
-    print(visitas)  # Nova linha para melhorar a legibilidade da saída
-   
-def BFS(quantidadeVertices, matriz):
+    ultimo_elemento = vertices_visitados.pop()  # Remove e captura o último elemento
+    vertices_visitados.insert(0, ultimo_elemento)
+    print("Vértices visitados em ordem:", vertices_visitados)  # Imprime os vértices visitados em ordem
+
+def BFS(quantidadeVertices, matriz, vertice=1):
 
     fila = deque()  # Inicializa uma fila vazia
     visitas = [0] * quantidadeVertices  # Inicializa a lista de visitas com zeros
+    vertices_visitados = []  # Lista para armazenar os vértices visitados em ordem
 
     while True:
         try:
-            verticeOrigem = int(input("Qual o vértice de origem: "))
-            if verticeOrigem > quantidadeVertices:
+            vertice = int(input("Qual o vértice de origem: "))
+            if vertice > quantidadeVertices:
                 raise ValueError(f"O número máximo de vértices é de {quantidadeVertices}, por favor insira um valor válido!")
             break
         except ValueError as e:
@@ -84,22 +95,22 @@ def BFS(quantidadeVertices, matriz):
             input("Pressione qualquer tecla para continuar...")
             limpar_tela()
 
-    fila.append(verticeOrigem)  # Adiciona o vértice de origem à fila
-    visitas[verticeOrigem - 1] = 1  # Marca o vértice de origem como visitado
+    fila.append(vertice)  # Adiciona o vértice de origem à fila
+    visitas[vertice - 1] = 1  # Marca o vértice de origem como visitado
+    vertices_visitados.append(vertice)  # Adiciona o vértice de origem à lista de visitados
 
     while fila:
         verticeAtual = fila.popleft()  # Remove o primeiro elemento da fila
-        print(verticeAtual, end=" ")
-
         for i in range(quantidadeVertices):
             if matriz[verticeAtual - 1][i] and not visitas[i]:
                 fila.append(i + 1)  # Adiciona o vértice adjacente à fila
                 visitas[i] = 1  # Marca o vértice adjacente como visitado
+                vertices_visitados.append(i + 1)  # Adiciona o vértice adjacente à lista de visitados
 
-    print(visitas)  # Nova linha para melhorar a legibilidade da saída
+    print("Vértices visitados em ordem:", vertices_visitados)  # Imprime os vértices visitados em ordem
 
-def fecho_transitivo_direto(matriz_adjacencia, tipoBusca):
-    tamanho_grafo = len(matriz_adjacencia)
+def fecho_transitivo_direto(matriz, tipoBusca):
+    tamanho_grafo = len(matriz)
     fecho = [[0] * tamanho_grafo for _ in range(tamanho_grafo)]
 
     if tipoBusca == True:
@@ -112,13 +123,15 @@ def fecho_transitivo_direto(matriz_adjacencia, tipoBusca):
                 if not visitados[atual]:
                     visitados[atual] = True
                     for vizinho in range(tamanho_grafo):
-                        if matriz_adjacencia[vizinho][atual] == 1 and not visitados[vizinho]:
+                        if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
                             pilha.append(vizinho)
                             fecho[vizinho][destino] = 1
 
         # Executa a busca em profundidade a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
             dfs(vertice)
+        for i in range(tamanho_grafo):
+            fecho[i][i] = 1
         return fecho
     else: 
         def bfs(destino):
@@ -128,7 +141,7 @@ def fecho_transitivo_direto(matriz_adjacencia, tipoBusca):
             while fila:
                 atual = fila.popleft()
                 for vizinho in range(tamanho_grafo):
-                    if matriz_adjacencia[vizinho][atual] == 1 and not visitados[vizinho]:
+                    if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
                         visitados[vizinho] = True
                         fila.append(vizinho)
                         fecho[vizinho][destino] = 1
@@ -136,11 +149,10 @@ def fecho_transitivo_direto(matriz_adjacencia, tipoBusca):
         # Executa a busca em largura a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
             bfs(vertice)
-
         return fecho
 
-def fecho_transitivo_inverso(matriz_adjacencia, tipoBusca):
-    tamanho_grafo = len(matriz_adjacencia)
+def fecho_transitivo_inverso(matriz, tipoBusca):
+    tamanho_grafo = len(matriz)
     fecho = [[0] * tamanho_grafo for _ in range(tamanho_grafo)]
 
     # Função para realizar uma busca em profundidade a partir de um vértice de destino
@@ -154,13 +166,15 @@ def fecho_transitivo_inverso(matriz_adjacencia, tipoBusca):
                 if not visitados[atual]:
                     visitados[atual] = True
                     for vizinho in range(tamanho_grafo):
-                        if matriz_adjacencia[vizinho][atual] == 1 and not visitados[vizinho]:
+                        if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
                             pilha.append(vizinho)
                             fecho[vizinho][destino] = 1
 
         # Executa a busca em profundidade a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
             dfs(vertice)
+        for i in range(tamanho_grafo):
+            fecho[i][i] = 1
         return fecho
     else: 
         def bfs(destino):
@@ -170,7 +184,7 @@ def fecho_transitivo_inverso(matriz_adjacencia, tipoBusca):
             while fila:
                 atual = fila.popleft()
                 for vizinho in range(tamanho_grafo):
-                    if matriz_adjacencia[vizinho][atual] == 1 and not visitados[vizinho]:
+                    if matriz[vizinho][atual] == 1 and not visitados[vizinho]:
                         visitados[vizinho] = True
                         fila.append(vizinho)
                         fecho[vizinho][destino] = 1
@@ -178,5 +192,17 @@ def fecho_transitivo_inverso(matriz_adjacencia, tipoBusca):
         # Executa a busca em largura a partir de cada vértice do grafo
         for vertice in range(tamanho_grafo):
             bfs(vertice)
-
         return fecho
+    
+def verificar_conexo(matriz):
+    tamanho_grafo = len(matriz)
+    # Calcula o fecho transitivo direto e o fecho transitivo inverso do grafo
+    fecho_direto = fecho_transitivo_direto(matriz, tipoBusca=True)
+    fecho_inverso = fecho_transitivo_inverso(matriz, tipoBusca=False)
+
+    # Verifica se todos os vértices são alcançáveis em ambos os fechos
+    for i in range(tamanho_grafo):
+        for j in range(tamanho_grafo):
+            if not (fecho_direto[i][j] and fecho_inverso[i][j]):
+                return False  # Se um vértice não for alcançável, o grafo não é conexo
+    return True  # Se todos os vértices forem alcançáveis, o grafo é conexo
